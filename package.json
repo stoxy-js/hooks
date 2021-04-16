@@ -1,6 +1,6 @@
 {
   "name": "@stoxy/hooks",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The reactive state management system equipped with Web Components.",
   "main": "stoxy-hooks.js",
   "files": [
@@ -14,6 +14,6 @@
   "author": "Matsuuu <huhta.matias@gmail.com> (https://matsu.fi/)",
   "license": "ISC",
   "dependencies": {
-    "@stoxy/core": "^0.4.7"
+    "@stoxy/core": "^0.4.8"
   }
 }

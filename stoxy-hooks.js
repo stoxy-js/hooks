@@ -28,7 +28,6 @@ function setupState(props, setState) {
     sub(props.key, (event) => {
         updateState(event.data, props, setState);
     });
-    // TODO: Read state ?
 }
 
 async function handleInitAndPersist(props, setState) {

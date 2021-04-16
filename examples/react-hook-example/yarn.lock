@@ -1536,9 +1536,9 @@
 
 "@stoxy/hooks@file:../..":
   "resolved" "file:../.."
-  "version" "1.0.0"
+  "version" "0.0.1"
   dependencies:
-    "@stoxy/core" "^0.4.0"
+    "@stoxy/core" "^0.4.3"
 
 "@surma/rollup-plugin-off-main-thread@^1.1.1":
   "integrity" "sha512-yBMPqmd1yEJo/280PAMkychuaALyQ9Lkb5q1ck3mjJrFuEobIfhnQ4J3mbvBoISmR3SWMWV+cGB/I0lCQee79A=="

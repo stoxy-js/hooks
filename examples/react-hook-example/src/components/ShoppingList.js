@@ -1,5 +1,6 @@
 import { useStoxy } from "@stoxy/hooks";
 import React from "react";
+import { SubElement } from "./SubElement";
 
 export function ShoppingList() {
 
@@ -38,6 +39,7 @@ export function ShoppingList() {
             <p>Counter: {state.foo.baz.counter}</p>
             <p>Counter: {counterState}</p>
             <p>{state.achievement}</p>
+            <SubElement />
         </div>
     );
 }
