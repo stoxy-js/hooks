@@ -1,4 +1,4 @@
-import { add, read, remove, write, update, sub } from "@stoxy/core";
+import { persistKey, add, read, remove, write, update, sub } from "@stoxy/core";
 /**
  * key: key,
  * state?: state object
@@ -24,55 +24,69 @@ export function useStoxy(React, props) {
 
 function setupState(props, setState) {
     if (typeof props.state === "undefined") return;
-
-    if (props.init) {
-        write(props.key, props.state);
-    }
+    handleInitAndPersist(props, setState);
     sub(props.key, (event) => {
-        updateState(event, props, setState);
+        updateState(event.data, props, setState);
     });
-    // Read state ?
+    // TODO: Read state ?
 }
 
-function updateState(event, props, setState) {
-    const newStateObject = createNewStateObject(props, event);
+async function handleInitAndPersist(props, setState) {
+    if (props.persist) {
+        const topLevelKey = props.key.split(".")[0];
+        persistKey(topLevelKey);
+    }
+
+    const savedState = await read(props.key);
+
+    if (savedState) {
+        updateState(savedState, props, setState);
+    } else {
+        if (props.init) {
+            write(props.key, props.state);
+        }
+    }
+
+}
+
+function updateState(data, props, setState) {
+    const newStateObject = createNewStateObject(props, data);
     setState(newStateObject);
 }
 
-function createNewStateObject(props, event) {
-    // TODO: Set only the properties we are observing
-    const data = event.data;
+function createNewStateObject(props, data) {
+    // Data == Current state given my stoxy
     const initialState = props.state;
 
-    const targetPropertyKey = event.key.replace(props.key, "");
-
-    const propKeys = targetPropertyKey.split(".");
-    let currentKey = propKeys.shift();
-    let property = initialState;
-    let initialStateProperty = initialState;
-
-    // If the initial state is just the value, and not a nested object
     if (typeof initialState !== "object") {
         return data;
     }
 
-    while (propKeys.length > 1) {
-        currentKey = propKeys.shift();
-        property = property[currentKey];
-        initialStateProperty = property[currentKey];
-    }
-
-
-    // Check to not set keys not initialized in the initial state
-    // TODO: Get these fixed and we should be guchi
-    //
-    // Get a reference of the old state and set properties as fit
-    // Problem: How to get current state
-    currentKey = propKeys.shift();
-
-    if (typeof property[currentKey] !== "object" && typeof initialStateProperty !== "undefined") {
-        property[currentKey] = data;
-    }
-
+    // Strip away parts of state we aren't following for this component
+    stripAwayNonFollowedProperties(data, initialState);
     return data;
+}
+
+/**
+ * We don't want hooked objects to get more state than
+ * they subscribed for, so we'll clean up the excess properties here
+ * before setting the state
+ * */
+function stripAwayNonFollowedProperties(data, initialState) {
+    const keys = Object.keys(data);
+    const initialKeys = Object.keys(initialState);
+
+    for (const key of keys) {
+        // If the key was not set in the initial state object, we delete it
+        // from this instance of the state
+        if (!initialKeys.includes(key)) {
+            delete data[key];
+        }
+
+        const dataAtKey = data[key];
+        // Iterate through nested state objects to clear them out too
+        if (typeof dataAtKey === "object" && !Array.isArray(dataAtKey)) {
+            stripAwayNonFollowedProperties(data[key], initialState[key]);
+        }
+    }
 }
