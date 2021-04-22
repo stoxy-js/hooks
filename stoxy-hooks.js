@@ -1,12 +1,5 @@
-import { persistKey, add, read, remove, write, update, sub } from "@stoxy/core";
-/**
- * key: key,
- * state?: state object
- * init?: true/false
- * persist? true/false
- *
- * Return object { state, remove, update, write }
- * */
+import { persistKey, add, read, remove, write, update, sub, where } from "@stoxy/core";
+
 export function useStoxy(React, props) {
     const key = props.key;
 
@@ -19,6 +12,7 @@ export function useStoxy(React, props) {
         remove: (predicate) => remove(key, predicate),
         write: (data) => write(key, data),
         update: (delegate) => update(key, delegate),
+        where: (predicate) => where(key, predicate)
     };
 }
 

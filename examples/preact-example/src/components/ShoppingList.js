@@ -19,7 +19,6 @@ export function ShoppingList() {
             }
         },
         init: true,
-        persist: true
     })
 
     const { state: counterState } = useStoxy(preact, {
