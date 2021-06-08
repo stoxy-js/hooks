@@ -6,8 +6,6 @@
 
 # 🗂️ StoxyHooks
 
-**Stoxy Hooks are still highly WIP**
-
 Stoxy is a state management API equipped with Web Components.
 
 Stoxy allows you to easily handle, persist and update data in your DOM without the weight of a framework.
